@@ -1,5 +1,4 @@
-# idSwap
-# Highly recommended to use this Steam ID Swapper instead, https://gitlab.com/ebob/steamswap as it is safer and more lightweight.
+#idSwap
 Steam ID Swapper
 
 **After installing, open idSwap.sln and then open the _NuGet Package Manager_**
