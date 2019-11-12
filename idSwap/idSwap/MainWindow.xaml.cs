@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,18 +15,25 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CefSharp;
+using CefSharp.Wpf;
 
 namespace idSwap
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    /// 
+
     public partial class MainWindow : Window
     {
         string sSession1 = ""; // SessionID for browser1
         string sSession2 = ""; // same as above but for browser2
         string sOldID = "";
         string sNewID = "";
+        bool oldVersion = false;
+        /*
+         Some comments might be outdated. shanty#0001 if you need me.
+         */
         public MainWindow()
         {
             InitializeComponent();
@@ -35,14 +44,158 @@ namespace idSwap
             cef2.RequestContext = new RequestContext(requestContextSettings); // Same as above but for browser2
         }
 
+        async private Task SetProxy(ChromiumWebBrowser cwb, string Address)
+        {
+            await Cef.UIThreadTaskFactory.StartNew(delegate
+            {
+
+                var rc = cwb.GetBrowser().GetHost().RequestContext;
+                var v = new Dictionary<string, object>();
+                v["mode"] = "fixed_servers";
+                v["server"] = Address;
+                string error;
+                bool success = rc.SetPreference("proxy", v, out error);
+            });
+        }
+
         private async void BtnUpdateInfo_Click(object sender, RoutedEventArgs e) // UpdateInfo button
+        {
+            await UpdateInfo();
+        }
+
+        private void BtnLeft_Click(object sender, RoutedEventArgs e) // Left button
+        {
+            if (!string.IsNullOrWhiteSpace(sSession1))
+            {
+                cef1.Address = cef1.Address + "?sessionID=" + sSession1 + "&type=profileSave&customURL=" + sNewID; // Sets the CustomURl to the random gen one
+            }
+        }
+
+        private void BtnRight_Click(object sender, RoutedEventArgs e) // Right button
+        {
+            cef2.Address = cef2.Address + "?sessionID=" + sSession2 + "&type=profileSave&customURL=" + sOldID; // Sets ID to the CustomURL which was on browser1
+        }
+
+        private void BtnRefresh_Click(object sender, RoutedEventArgs e) // Refresh button
+        {
+            if (cef1.Address.Contains(@"/edit"))
+            {
+                cef1.ExecuteScriptAsync("document.getElementsByClassName('whiteLink')[1].click()"); // Clicks the edit profile link as otherwise reloading after
+            }                                                                                       // ID has changed will result in profile not being found
+            else
+            {
+                cef1.GetBrowser().Reload();
+            }
+            if (cef2.Address.Contains(@"/edit"))
+            {
+                cef2.ExecuteScriptAsync("document.getElementsByClassName('whiteLink')[1].click()");
+            }
+            else
+            {
+                cef2.GetBrowser().Reload();
+            }
+        }
+
+        private void BtnPing_Click(object sender, RoutedEventArgs e)
+        {
+            pingCheck();
+        }
+
+        private void pingCheck()
+        {
+            long Google = new Ping().Send("www.google.com").RoundtripTime;
+            long Steam = new Ping().Send("www.steamcommunity.com").RoundtripTime;
+            tbxInfo.AppendText("Ping to google.com - " + Google.ToString() + "ms" + Environment.NewLine);
+            tbxInfo.AppendText("Ping to steamcommunity.com - " + Steam.ToString() + "ms" + Environment.NewLine);
+        }
+
+        private void BtnClear_Click(object sender, RoutedEventArgs e)
+        {
+            tbxInfo.Clear();
+        }
+
+        private void SldLoopNum_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            tbLoops.Text = sldLoopNum.Value + " Loops: ";
+        }
+
+        private async void BtnSetProxy_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(tbxLBP.Text) && tbxLBP.Text != "IP:PORT")
+                {
+                    await SetProxy(cef1, tbxLBP.Text);
+                }
+                if (!string.IsNullOrWhiteSpace(tbxRBP.Text) && tbxRBP.Text != "IP:PORT")
+                {
+                    await SetProxy(cef2, tbxRBP.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                tbxInfo.AppendText(ex.ToString() + Environment.NewLine);
+            }
+        }
+
+        private void BtnWIMP_Click(object sender, RoutedEventArgs e)
+        {
+            cef1.Load("https://whatismyipaddress.com/");
+            cef2.Load("https://whatismyipaddress.com/");
+        }
+
+        private void BtnSteam_Click(object sender, RoutedEventArgs e)
+        {
+            cef1.Load("https://steamcommunity.com/login/");
+            cef2.Load("https://steamcommunity.com/login/");
+        }
+
+        private void BtnOldVersion_Click(object sender, RoutedEventArgs e)
+        {
+            oldVersion = !oldVersion;
+            if (oldVersion)
+            {
+                btnSwap.Visibility = Visibility.Hidden;
+                sldLoopNum.Visibility = Visibility.Hidden;
+                tbLoops.Visibility = Visibility.Hidden;
+                btnUpdateInfo.Visibility = Visibility.Visible;
+                btnLeft.Visibility = Visibility.Visible;
+                btnRight.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                btnSwap.Visibility = Visibility.Visible;
+                sldLoopNum.Visibility = Visibility.Visible;
+                tbLoops.Visibility = Visibility.Visible;
+                btnUpdateInfo.Visibility = Visibility.Hidden;
+                btnLeft.Visibility = Visibility.Hidden;
+                btnRight.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private async void BtnSwap_Click(object sender, RoutedEventArgs e)
+        {
+            await UpdateInfo();
+
+            int numLoop = (int)sldLoopNum.Value;
+            await Task.Delay(1000);
+            cef1.Address = cef1.Address + "?sessionID=" + sSession1 + "&type=profileSave&customURL=" + sNewID; // Sets the CustomURl to the random gen one
+            for (int i = 0; i < numLoop; i++)
+            {
+                await Task.Delay(10);
+                cef2.Address = cef2.Address + "?sessionID=" + sSession2 + "&type=profileSave&customURL=" + sOldID; // Sets ID to the CustomURL which was on browser1
+            }
+
+        }
+
+        private async Task UpdateInfo()
         {
             cef1.ExecuteScriptAsync("document.getElementsByClassName('whiteLink')[1].click()"); // Reloads profile, uses link instead of normal reload
             cef2.ExecuteScriptAsync("document.getElementsByClassName('whiteLink')[1].click()"); // for reason stated above
             tbxInfo.Clear();
 
             // Gets the sessionid for browser1
-            var task = cef1.EvaluateScriptAsync("g_sessionID"); 
+            var task = cef1.EvaluateScriptAsync("g_sessionID");
 
             await task.ContinueWith(t =>
             {
@@ -104,39 +257,6 @@ namespace idSwap
             }
             sNewID = new String(stringChars);
             tbxInfo.AppendText("URL to change to: " + sNewID + Environment.NewLine);
-        }
-
-        private void BtnLeft_Click(object sender, RoutedEventArgs e) // Left button
-        {
-            if (!string.IsNullOrWhiteSpace(sSession1))
-            {
-                cef1.Address = cef1.Address + "?sessionID=" + sSession1 + "&type=profileSave&customURL=" + sNewID; // Sets the CustomURl to the random gen one
-            }
-        }
-
-        private void BtnRight_Click(object sender, RoutedEventArgs e) // Right button
-        {
-            cef2.Address = cef2.Address + "?sessionID=" + sSession2 + "&type=profileSave&customURL=" + sOldID; // Sets ID to the CustomURL which was on browser1
-        }
-
-        private void BtnRefresh_Click(object sender, RoutedEventArgs e) // Refresh button
-        {
-            if (cef1.Address.Contains(@"/edit"))
-            {
-                cef1.ExecuteScriptAsync("document.getElementsByClassName('whiteLink')[1].click()"); // Clicks the edit profile link as otherwise reloading after
-            }                                                                                       // ID has changed will result in profile not being found
-            else
-            {
-                cef1.GetBrowser().Reload();
-            }
-            if (cef2.Address.Contains(@"/edit"))
-            {
-                cef2.ExecuteScriptAsync("document.getElementsByClassName('whiteLink')[1].click()");
-            }
-            else
-            {
-                cef2.GetBrowser().Reload();
-            }
         }
     }
 }

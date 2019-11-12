@@ -10,17 +10,30 @@
         Title="Steam ID Swapper" Height="460" Width="900">
     <Grid>
         <cef:ChromiumWebBrowser Name="cef1" Grid.Row="0"
-        Address="https://steamcommunity.com/login" Margin="0,0,634,0" Height="429" VerticalAlignment="Bottom" />
+        Address="https://whatismyipaddress.com" Margin="0,0,634,0" Height="429" VerticalAlignment="Bottom" />
         <cef:ChromiumWebBrowser Name="cef2"
-            Address="https://steamcommunity.com/login" Margin="633,-10,0,0" />
-        <TextBox x:Name="tbxInfo" HorizontalAlignment="Left" Height="178" Margin="265,225,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="352"/>
-        <TextBlock HorizontalAlignment="Left" Margin="358,23,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Calibri Light" FontSize="24" Width="178" Height="33"><Run Text="Steam ID Swappe"/><Run Text="r"/><LineBreak/><Run/></TextBlock>
-        <Label Content="by shanty" HorizontalAlignment="Left" Margin="475,56,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="btnUpdateInfo" Content="update info" HorizontalAlignment="Left" Margin="409,150,0,0" VerticalAlignment="Top" Width="74" Click="BtnUpdateInfo_Click"/>
-        <Button x:Name="btnRefresh" Content="Refresh" HorizontalAlignment="Left" Margin="409,176,0,0" VerticalAlignment="Top" Width="75" Click="BtnRefresh_Click"/>
-        <Button x:Name="btnLeft" Content="Left" HorizontalAlignment="Left" Margin="409,200,0,0" VerticalAlignment="Top" Width="38" Click="BtnLeft_Click"/>
-        <Button x:Name="btnRight" Content="Right" HorizontalAlignment="Left" Margin="446,200,0,0" VerticalAlignment="Top" Width="38" RenderTransformOrigin="0.52,0.75" Click="BtnRight_Click"/>
-        <Button x:Name="btnLeft_Copy" Content="Left" HorizontalAlignment="Left" Margin="409,200,0,0" VerticalAlignment="Top" Width="38" Click="BtnLeft_Click"/>
-        <Button x:Name="btnRight_Copy" Content="Right" HorizontalAlignment="Left" Margin="446,200,0,0" VerticalAlignment="Top" Width="38" RenderTransformOrigin="0.52,0.75" Click="BtnRight_Click"/>
+            Address="https://whatismyipaddress.com/" Margin="622,0,0,0" Height="429" VerticalAlignment="Bottom" />
+        <TextBox x:Name="tbxInfo" HorizontalAlignment="Left" Height="91" Margin="265,330,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="352"/>
+        <TextBlock HorizontalAlignment="Left" Margin="358,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Calibri Light" FontSize="24" Width="178" Height="33"><Run Text="Steam ID Swappe"/><Run Text="r"/><LineBreak/><Run/></TextBlock>
+        <Label Content="by shanty" HorizontalAlignment="Left" Margin="475,38,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="btnUpdateInfo" Content="update info" HorizontalAlignment="Left" Margin="265,146,0,0" VerticalAlignment="Top" Width="352" Click="BtnUpdateInfo_Click" Height="50" FontSize="24" Visibility="Visible"/>
+        <Button x:Name="btnLeft" Content="Left" HorizontalAlignment="Left" Margin="265,242,0,0" VerticalAlignment="Top" Width="177" Click="BtnLeft_Click" Height="50" FontSize="24" Visibility="Hidden"/>
+        <Button x:Name="btnRight" Content="Right" HorizontalAlignment="Left" Margin="441,242,0,0" VerticalAlignment="Top" Width="176" RenderTransformOrigin="0.52,0.75" Click="BtnRight_Click" Height="50" FontSize="24" Visibility="Hidden"/>
+        <Button x:Name="btnRefresh" Content="Refresh" HorizontalAlignment="Left" Margin="265,194,0,0" VerticalAlignment="Top" Width="352" Height="49" FontSize="24" Click="BtnRefresh_Click" Visibility="Visible"/>
+        <Button x:Name="btnPing" Content="Check ping" HorizontalAlignment="Left" Margin="265,305,0,0" VerticalAlignment="Top" Width="75" Click="BtnPing_Click"/>
+        <Button x:Name="btnSwap" Content="Swap ID" HorizontalAlignment="Left" Margin="265,146,0,0" VerticalAlignment="Top" Width="352" Height="49" FontSize="24" Visibility="Visible" Click="BtnSwap_Click"/>
+        <TextBlock x:Name="tbLoops" HorizontalAlignment="Left" Margin="265,248,0,0" TextWrapping="Wrap" Text="# of Loops: " VerticalAlignment="Top" FontSize="24" Visibility="Visible" RenderTransformOrigin="0.548,-0.625"/>
+        <GroupBox x:Name="gbxProxy" Header="Proxy settings" HorizontalAlignment="Left" Height="86" Margin="260,55,0,0" VerticalAlignment="Top" Width="317 ">
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Left browser:" VerticalAlignment="Top" Margin="0,16,0,0" RenderTransformOrigin="0.514,1.128"/>
+        </GroupBox>
+        <TextBlock HorizontalAlignment="Left" Margin="265,113,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18"><Run Text="Right browser:"/><LineBreak/><Run/></TextBlock>
+        <TextBox x:Name="tbxLBP" HorizontalAlignment="Left" Height="23" Margin="346,84,0,0" TextWrapping="Wrap" Text="IP:PORT" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="tbxRBP" HorizontalAlignment="Left" Height="23" Margin="346,112,0,0" TextWrapping="Wrap" Text="IP:PORT" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="btnSetProxy" Content="Set Proxy" HorizontalAlignment="Left" Margin="475,69,0,0" VerticalAlignment="Top" Width="75" Click="BtnSetProxy_Click"/>
+        <Button x:Name="btnWIMP" Content="WIMP" HorizontalAlignment="Left" Margin="475,92,0,0" VerticalAlignment="Top" Width="75" Click="BtnWIMP_Click"/>
+        <Button x:Name="btnSteam" Content="Steam" HorizontalAlignment="Left" Margin="475,114,0,0" VerticalAlignment="Top" Width="75" Click="BtnSteam_Click"/>
+        <Button x:Name="btnClear" Content="Clear" HorizontalAlignment="Left" Margin="346,305,0,0" VerticalAlignment="Top" Width="75" Click="BtnClear_Click"/>
+        <Slider x:Name="sldLoopNum" HorizontalAlignment="Left" Margin="384,259,0,0" IsSnapToTickEnabled="True"  VerticalAlignment="Top" Width="229" SmallChange="1" AutoToolTipPlacement="TopLeft" AutoToolTipPrecision="0" Minimum="1" Maximum="28" ValueChanged="SldLoopNum_ValueChanged" Value="10" Visibility="Visible"/>
+        <Button x:Name="btnOldVersion" Content="Use old version" HorizontalAlignment="Left" Margin="426,305,0,0" VerticalAlignment="Top" Width="89" Click="BtnOldVersion_Click"/>
     </Grid>
 </Window>
