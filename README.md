@@ -1,4 +1,4 @@
-#idSwap
+# idSwap
 Steam ID Swapper
 
 **After installing, open idSwap.sln and then open the _NuGet Package Manager_**
