@@ -1,6 +1,10 @@
 # idSwap
 Steam ID Swapper
 
+**Updated to work after recent Steam profile update**
+Note: It is not recommended to use this, I haven't tested it nor maintained it that much over time. It should be used purely for educational purposes. If you need someone to swap a Steam ID for you, I recommend contacting my friend caleb#9328
+
+# Instructions
 **After installing, open idSwap.sln and then open the _NuGet Package Manager_**
 
 ![Image 1](https://i.imgur.com/TTld6dr.png)
