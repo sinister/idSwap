@@ -229,7 +229,7 @@ namespace idSwap
             tbxInfo.AppendText("B2 Session ID: " + sSession2 + Environment.NewLine);
 
             // Gets the CustomURL on browser1
-            task = cef1.EvaluateScriptAsync("(function() {return document.getElementById('customURL').value;})();");
+            task = cef1.EvaluateScriptAsync("(function() {return document.querySelector(\"#application_root > div.profileeditshell_Shell_2kqKZ > div.profileeditshell_PageContent_23XE6 > form > div:nth-child(11) > div.profileedit_ProfileBoxContent_3s6BB > div:nth-child(3) > label > div.DialogInput_Wrapper._DialogLayout > input\").value;})();");
 
             await task.ContinueWith(t =>
             {
