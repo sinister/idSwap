@@ -1,4 +1,4 @@
-Steam ID Swapper by shanty#0001
+Steam ID Swapper by shantanu#0001
 Credit to duk (https://ogusers.com/duk) for the method used
 Credit to caleb (https://ogusers.com/lain) for helping me test
 
